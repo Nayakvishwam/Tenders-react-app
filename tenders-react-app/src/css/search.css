@@ -1,0 +1,127 @@
+#container {
+    justify-content: center;
+    display: flex;
+}
+
+.card-body {
+    /* z-index: 9999; */
+}
+
+#searchicon {
+    text-indent: -999px;
+    overflow: hidden;
+    width: 20px;
+    height: 15px;
+    border: 1px solid transparent;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat center;
+    left: 10%;
+}
+
+.popover-content {
+    text-align: left;
+    display: grid;
+    width: 400px;
+    /* overflow:scroll; */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.popoverpass {
+    position: absolute;
+    display: none;
+    width: 400px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+}
+
+.caret-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid black;
+}
+
+#childcontainer {
+    border: 1px solid;
+    border-radius: 2px;
+    height: 30px;
+    width: 550px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+#searchinput {
+    border: none;
+    font-size: 14px;
+    height: 17px;
+    width: 480px;
+}
+
+#container:focus-within {
+    border: skyblue;
+}
+
+#searchinput:focus {
+    outline-width: 0;
+}
+
+#arrowdiv {
+    margin-left: 10px;
+    border-left: 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 30px;
+}
+
+#downarrow {
+    border: none;
+    border-color: white;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 27px;
+    border-top-right-radius: 1px;
+    width: 27px;
+    /* z-index: 8; */
+}
+
+#downarrow:hover,
+#arrowdiv:hover {
+    background-color: lightgray;
+
+}
+
+@media screen and (max-width: 529px),
+(max-width:1280px) {
+    #searchpart {
+        width: 86%;
+    }
+
+    #searchinput {
+        width: 85%;
+    }
+    #searchselected{
+        width: 85%;
+    }
+    #selectedsearch{
+        width: 40%;
+    }
+    #searchicon {
+        width: 29px;
+    }
+}
+
+@media screen and (max-width: 529px) {
+    #childcontainer {
+        width: 100%;
+    }
+}
