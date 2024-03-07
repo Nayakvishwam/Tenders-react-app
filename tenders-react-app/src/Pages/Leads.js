@@ -352,7 +352,7 @@ const Leads = () => {
     useEffect(() => {
         document.body.addEventListener('click', (event) => {
             const target = event.target
-            if (!["downarrow", "myPopover"].includes(target.id)) {
+            if (!["downarrow", "myPopover", " css-qbdosj-Input"].includes(target.id || target.className)) {
                 DefaultLayoutCard()
             }
         });

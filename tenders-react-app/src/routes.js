@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router";
 import App from "./App";
 import Login from "./Pages/login";
 import { RequestAuthenticator } from "./tools/tools";
-import Page404  from "./Pages/Error404";
+import Page404 from "./Pages/Error404";
 
 const CustomRouter = () => {
     return (

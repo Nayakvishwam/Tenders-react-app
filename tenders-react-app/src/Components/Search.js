@@ -1,7 +1,8 @@
 import $ from "jquery"
 import { useState, useEffect } from "react";
 import { SearchCondition } from "../tools/tools";
-
+import { GetKeywords } from "../apicaller";
+import Select from 'react-select'
 const variables = await import("../ImportVariables")
 
 export const ReadXml = ({ ...params }) => {
@@ -19,6 +20,9 @@ export const ReadXml = ({ ...params }) => {
                 <field name="contactpers" type="text">
                     Contact Person
                 </field>
+                <field name="keywordid" type="text" relationtypes="yes" dropdown="yes" dependsstateflag="keywords" reactselect="yes" multiple="yes" isfilter="yes">
+                    Keywords
+                </field>    
                 <field name="create_user_id" type="number" dropdown="yes" dependsstateapi="users" filterfield="typesuser" filtervalue="executive" value="id" showdata="username" isfilter="yes">
                     Executive User
                 </field>
@@ -44,6 +48,9 @@ export const ReadXml = ({ ...params }) => {
                 <field name="contactpers" type="text">
                     Contact Person
                 </field>
+                <field name="keywordid" type="number" dropdown="yes" relationtypes="yes" dependsstateflag="keywords" reactselect="yes" multiple="yes" isfilter="yes">
+                    Keywords
+                </field>   
                 <field name="create_user_id" type="number" dropdown="yes" dependsstateapi="users" value="id" filterfield="typesuser" filtervalue="executive" showdata="username" isfilter="yes">
                     Executive User
                 </field>
@@ -69,6 +76,9 @@ export const ReadXml = ({ ...params }) => {
                 <field name="contactpers" type="text">
                     Contact Person
                 </field>
+                <field name="keywordid" type="number" dropdown="yes" relationtypes="yes" dependsstateflag="keywords" reactselect="yes" multiple="yes" isfilter="yes">
+                    Keywords
+                </field>   
                 <field name="create_user_id" type="number" dropdown="yes" dependsstateapi="users" value="id" filterfield="typesuser" filtervalue="executive" showdata="username" isfilter="yes">
                     Executive User
                 </field>
@@ -94,6 +104,9 @@ export const ReadXml = ({ ...params }) => {
                 <field name="contactpers" type="text">
                     Contact Person
                 </field>
+                <field name="keywordid" type="number" dropdown="yes" relationtypes="yes" dependsstateflag="keywords" reactselect="yes" multiple="yes" isfilter="yes">
+                    Keywords
+                </field>   
                 <field name="create_user_id" type="number" dropdown="yes" dependsstateapi="users" value="id" filterfield="typesuser" filtervalue="executive" showdata="username" isfilter="yes">
                     Executive User
                 </field>
@@ -135,9 +148,12 @@ export const ReadXml = ({ ...params }) => {
                 name: field.eq(0).attr('name'),
                 dropdown: field.eq(0).attr('dropdown') == "yes" ? true : false,
                 isfilter: field.eq(0).attr('isfilter') == "yes" ? true : false,
+                reactselect: field.eq(0).attr('reactselect') == "yes" ? true : false,
+                multiple: field.eq(0).attr('multiple') == "yes" ? true : false,
                 importname: field.eq(0).attr('importname'),
                 depends: field.eq(0).attr('dependsstate') ? field.eq(0).attr('dependsstate') : false,
                 anydepends: field.eq(0).attr('anydepends') ? true : false,
+                dependsstateflag: field.eq(0).attr('dependsstateflag') ? field.eq(0).attr('dependsstateflag') : false,
                 dependsstateapi: field.eq(0).attr('dependsstateapi') ? field.eq(0).attr('dependsstateapi') : false,
                 value: field.eq(0).attr('value') ? field.eq(0).attr('value') : false,
                 showdata: field.eq(0).attr('showdata') ? field.eq(0).attr('showdata') : false,
@@ -151,13 +167,31 @@ export const ReadXml = ({ ...params }) => {
     return view_fields_domain
 }
 
+let mergedata = {
+    "mergedata": {
+        "keywordid": {
+            "data": [],
+            "dependsfield": "keywordid",
+            "dependstable": "leads_keywords_lines",
+            "maintablefield": "id",
+            "operator":"in"
+        }
+    }
+}
 export const Search = ({ ...params }) => {
     const { fields, domain, context } = ReadXml({ view: params.view })
     const SearchPass = params.passsearchdata
     const [filter, setFilter] = useState(false)
     const [dependsdata, setDependsData] = useState({
-        "state": null,
+        "state": null
     })
+    const customStyles = {
+        container: (provided) => ({
+            ...provided,
+            width: 160, // Set the width of the dropdown
+            height: 2, // Set the height of the dropdown
+        }),
+    }
     useEffect(() => {
         const info = params.FieldsData()
         Object.keys(info).map((statekey) => {
@@ -166,10 +200,19 @@ export const Search = ({ ...params }) => {
                 if (userdata._code == 200) {
                     setDependsData(preState => ({
                         ...preState,
-                        [statekey]: response.data.data
+                        [statekey]: userdata.data
                     }))
                 }
             })
+        })
+        GetKeywords().then((response) => {
+            var data = response.data
+            if (data._code == 200) {
+                setDependsData(preState => ({
+                    ...preState,
+                    ["keywords"]: data.data
+                }))
+            }
         })
     }, [])
     const PopupHeight = () => {
@@ -213,13 +256,13 @@ export const Search = ({ ...params }) => {
     const [selectedsearchinfo, setSelectedSearchInfo] = useState("")
     const SelectedSearch = ({ ...params }) => {
         const searchparams = SearchCondition([params])
-        SearchPass({ searchds: searchparams, domain: domain, context: context })
+        SearchPass({ searchds: searchparams, domain: domain, context: context, dependsentities: Object.values(mergedata.mergedata) })
     }
     const MultiSearchSubmit = (event) => {
         event.preventDefault()
         let searchdata = new FormData(event.target)
         searchdata = Object.fromEntries(searchdata)
-        searchdata = Object.entries(searchdata).filter(([key, value]) => value.trim() !== "")
+        searchdata = Object.entries(searchdata).filter(([key, value]) => value.trim() !== "" && key != "keywordid")
         if (searchdata.length > 0) {
             searchdata = Object.fromEntries(searchdata)
             var data = Array.from(fields)
@@ -228,7 +271,7 @@ export const Search = ({ ...params }) => {
                 return response
             })
             const searchparams = SearchCondition(data)
-            SearchPass({ searchds: searchparams, domain: domain, context: context })
+            SearchPass({ searchds: searchparams, domain: domain, context: context, dependsentities: Object.values(mergedata.mergedata) })
         }
     }
     const setOnChange = (field) => {
@@ -324,24 +367,42 @@ export const Search = ({ ...params }) => {
                                                                             </select>
                                                                         </>
                                                                     ) : null :
-                                                                <>
-                                                                    <lable for={field.name}>{field.text} :- </lable>
-                                                                    <select id="myPopover" name={field.name} {...setOnChange(field)}>
-                                                                        {field.anydepends && !dependsdata[field.name] && (<option value="">--- Select Option ---</option>)}
-                                                                        {ProvideOptions(field)?.map((response) => {
-                                                                            if (field.filterfield) {
-                                                                                if (response[field.filterfield] == field.filtervalue) {
-                                                                                    return <option value={field.value ? response[field.value] : response}>
-                                                                                        {field.showdata ? response[field.showdata] : response}
-                                                                                    </option>
+                                                                field.reactselect ?
+                                                                    <div className="keywordscontainer" id="myPopover">
+                                                                        <lable for={field.name}>{field.text} :- </lable>
+                                                                        <br />
+                                                                        {dependsdata.keywords.map((response, index) => {
+                                                                            return <>{(index + 1) % 4 == 0 ? <br /> : null}{response.label}:- <input type="checkbox" value={response.value} name={field.name} id="myPopover" onChange={(event) => {
+                                                                                let data = mergedata.mergedata[event.target.name].data
+                                                                                if (event.target.checked) {
+                                                                                    mergedata.mergedata[event.target.name].data.push(Number(event.target.value))
                                                                                 }
-                                                                            }
-                                                                            else {
-                                                                                return <option value={field.value ? response[field.value] : response}>{field.showdata ? response[field.showdata] : response}</option>
-                                                                            }
-                                                                        })}
-                                                                    </select>
-                                                                </>
+                                                                                else {
+                                                                                    mergedata.mergedata[event.target.name].data = data.filter((response) => response != Number(event.target.value))
+                                                                                }
+                                                                            }} /> </>
+                                                                        })
+                                                                        }
+                                                                    </div>
+                                                                    :
+                                                                    <>
+                                                                        <lable for={field.name}>{field.text} :- </lable>
+                                                                        <select id="myPopover" name={field.name} {...setOnChange(field)}>
+                                                                            {field.anydepends && !dependsdata[field.name] && (<option value="">--- Select Option ---</option>)}
+                                                                            {ProvideOptions(field)?.map((response) => {
+                                                                                if (field.filterfield) {
+                                                                                    if (response[field.filterfield] == field.filtervalue) {
+                                                                                        return <option value={field.value ? response[field.value] : response}>
+                                                                                            {field.showdata ? response[field.showdata] : response}
+                                                                                        </option>
+                                                                                    }
+                                                                                }
+                                                                                else {
+                                                                                    return <option value={field.value ? response[field.value] : response}>{field.showdata ? response[field.showdata] : response}</option>
+                                                                                }
+                                                                            })}
+                                                                        </select>
+                                                                    </>
                                                             :
                                                             <input type={field.type} id="myPopover" name={field.name} />
                                                         }

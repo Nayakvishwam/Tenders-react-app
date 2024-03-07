@@ -17,6 +17,11 @@
     left: 10%;
 }
 
+.keywordscontainer {
+    max-height: 90px;
+    overflow-y: auto;
+}
+
 .popover-content {
     text-align: left;
     display: grid;
@@ -109,12 +114,15 @@
     #searchinput {
         width: 85%;
     }
-    #searchselected{
+
+    #searchselected {
         width: 85%;
     }
-    #selectedsearch{
+
+    #selectedsearch {
         width: 40%;
     }
+
     #searchicon {
         width: 29px;
     }
