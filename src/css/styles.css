@@ -1,0 +1,108 @@
+/* Style the dropdown button */
+.dropbtn {
+  background-color: #ffffff;
+  /* White background */
+  color: #000000;
+  /* Black font color */
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #000000;
+  /* Black border */
+  border-radius: 8px;
+  /* Rounded corners */
+  cursor: pointer;
+  height: 30;
+  width: 90;
+}
+
+/* Style the dropdown button */
+.defaultActions {
+  background-color: #ffffff;
+  /* White background */
+  color: #000000;
+  /* Black font color */
+  padding: 12px;
+  /* Rounded corners */
+  cursor: pointer;
+  height: 30;
+  width: 90;
+}
+
+/* Style the dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  /* White background */
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  color: #000000;
+  /* Black font color */
+  border: 1px solid #000000;
+  /* Black border */
+  border-radius: 8px;
+  /* Rounded corners */
+}
+
+.dropDownAction {
+  display: none;
+  background-color: #ffffff;
+  /* White background */
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  color: #000000;
+  /* Black font color */
+  border: 1px solid #000000;
+  /* Black border */
+  border-radius: 8px;
+  /* Rounded corners */
+  position: absolute;
+  right: 0;
+}
+
+/* Style the links inside the dropdown */
+.dropdown-content a {
+  color: #000000;
+  /* Black font color */
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropDownAction a {
+  color: #000000;
+  /* Black font color */
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+  color: #000000;
+  /* Change font color on hover */
+}
+
+.dropDownAction a:hover {
+  background-color: #f1f1f1;
+  color: #000000;
+  /* Change font color on hover */
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdownContent:hover .dropDownAction {
+  display: block;
+}
+
+.fa {
+  margin-right: 5px;
+  color: blue;
+  /* Blue color for the icon */
+}
